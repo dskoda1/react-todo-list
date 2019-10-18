@@ -3,6 +3,18 @@ import React, { Component } from "react";
 import Form from "./Form";
 import List from "./List";
 
+import { withStyles } from '@material-ui/core/styles';
+import { Typography, Grid, Paper } from "@material-ui/core";
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+
+  },
+  paper: {
+  }
+})
+
 class ToDoList extends Component {
 
   constructor(){
@@ -120,36 +132,31 @@ class ToDoList extends Component {
 
   moveUp(id) {
     console.log(`Moving ${id} up`)
-    let listItems = JSON.parse(JSON.stringify(this.state.listItems));
-    for (let i = 0; i < listItems.length; ++i) {
-        if (listItems[i].id === id) {
-            console.log(listItems[i].rank)
-            // Raise this items rank
-            if (i !== 0) {
-                const item = listItems[i]
-                listItems[i] = {...item, rank: item.rank-- }
-            }
+    this.setState(state => {
+      const list = state.listItems.map((item, j) => {
+        if (item.id === id) {
+          return {...item, rank: item.rank--}
         }
-    }
-    this.setState({
-        listItems
+        return item
+      })
+      return {
+        list
+      }
     })
   }
 
   moveDown(id) {
     console.log(`Moving ${id} down`)
-    let listItems = JSON.parse(JSON.stringify(this.state.listItems));
-    for (let i = 0; i < listItems.length; ++i) {
-        if (listItems[i].id === id) {
-            console.log(listItems[i].rank)
-            // Lower this items rank
-            if (i !== listItems.length - 1) {
-                listItems[i].rank--
-            }
+    this.setState(state => {
+      const list = state.listItems.map((item, j) => {
+        if (item.id === id) {
+          return {...item, rank: item.rank++}
         }
-    }
-    this.setState({
-        listItems
+        return item
+      })
+      return {
+        list
+      }
     })
   }
 
@@ -158,22 +165,35 @@ class ToDoList extends Component {
   }
 
   render(){
-
     return (
-      <div className="todo-list">
-        <h1 className="text-center">To Do List</h1>
-        <Form addItem={this.addItem} />
-        <List
-          listItems={this.state.listItems}
-          deleteItem={this.deleteItem}
-          setToEditMode={this.setToEditMode}
-          cancelEditMode={this.cancelEditMode}
-          saveEdit={this.saveEdit}
-          clearList={this.clearList}
-          toggleItem={this.toggleItem}
-          moveUp={this.moveUp}
-          moveDown={this.moveDown}
-        />
+      <div className={this.props.classes.root}>
+        <Grid container justify={'center'}>
+          <Paper>
+          <Grid item xs={12}>
+            <Typography variant="h2">To Do List</Typography>
+
+          </Grid>
+          <Grid item xs={12}>
+          <Form addItem={this.addItem} />
+            
+          </Grid>
+          <Grid item xs={12}>
+          <List
+            listItems={this.state.listItems}
+            deleteItem={this.deleteItem}
+            setToEditMode={this.setToEditMode}
+            cancelEditMode={this.cancelEditMode}
+            saveEdit={this.saveEdit}
+            clearList={this.clearList}
+            toggleItem={this.toggleItem}
+            moveUp={this.moveUp}
+            moveDown={this.moveDown}
+          />
+          </Grid>
+          </Paper>
+          
+        </Grid>
+        
       </div>
     );
 
@@ -181,4 +201,4 @@ class ToDoList extends Component {
 
 }
 
-export default ToDoList;
+export default withStyles(styles)(ToDoList);

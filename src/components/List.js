@@ -15,7 +15,7 @@ class List extends Component {
 
   render(){
     const listItems = this.props.listItems
-    .sort( (itemOne, itemTwo) => itemOne.rank > itemTwo.rank )
+    .sort( (itemOne, itemTwo) => itemOne.rank - itemTwo.rank )
     .map( (item) => {
       return (
         <ListItem
